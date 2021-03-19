@@ -11,7 +11,7 @@
 #include "volume.h"
 #include "Drive/mbr_gpt.h"
 
-#define DISK_INDEX_IMAGE (-1)
+#define DISK_INDEX_IMAGE			(-1)
 
 class Disk
 {
@@ -55,7 +55,7 @@ public:
 	std::string product_id()					const { return _product_id; };
 	std::string product_version()				const { return _product_version; };
 	std::string serial_number()					const { return _serial_number; };
-	bool protective_mbr()						const { return _protective_mbr; }
+	bool has_protective_mbr()						const { return _protective_mbr; }
 	DWORD64 size()								const { return _size; };
 	DWORD partition_type()						const { return _partition_type; };
 

@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include <string>
 #include <vector>
 #include <chrono>
@@ -31,6 +32,8 @@ namespace utils
 
 	namespace strings
 	{
+		std::string upper(std::string& s);
+
 		std::string lower(std::string& s);
 
 		void ltrim(std::string& s);
@@ -70,6 +73,8 @@ namespace utils
 
 		std::string hex(DWORD value, bool suffix = false, bool swap = false);
 
+		std::string hex6(ULONG64 value, bool suffix = false, bool swap = false);
+
 		std::string hex(ULONG64 value, bool suffix = false, bool swap = false);
 
 		std::string hex(LONG64 value, bool suffix = false, bool swap = false);
@@ -96,6 +101,10 @@ namespace utils
 	namespace times
 	{
 		std::string display_systemtime(SYSTEMTIME st);
+
+		BOOL filetime_to_systemtime(FILETIME ft, PSYSTEMTIME pST);
+
+		BOOL ull_to_systemtime(ULONGLONG ull, PSYSTEMTIME pST);
 
 		BOOL filetime_to_local_systemtime(FILETIME ft, PSYSTEMTIME pST);
 

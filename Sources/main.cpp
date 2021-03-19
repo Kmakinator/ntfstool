@@ -30,6 +30,7 @@ int main(int argc, char** argv) {
 
 			if (opts->command == "mbr")				commands::mbr::print_mbr(opts);
 			else if (opts->command == "shell")		commands::shell::go(opts);
+			else if (opts->command == "smart")		commands::smart::print_smart(opts);
 			else if (opts->command == "gpt")		commands::gpt::print_gpt(opts);
 			else if (opts->command == "usn")		commands::usn::print_usn_journal(opts);
 			else if (opts->command == "extract")	commands::extract::extract_file(opts);
@@ -37,6 +38,7 @@ int main(int argc, char** argv) {
 			else if (opts->command == "image")		commands::image::create_image(opts);
 			else if (opts->command == "undelete")	commands::undelete::print_deleted_file(opts);
 			else if (opts->command == "mft")		commands::mft::print_mft(opts);
+			else if (opts->command == "shadow")		commands::shadow::print_volumeshadow(opts);
 			else if (opts->command == "logfile") 	commands::logfile::print_logfile(opts);
 			else if (opts->command == "reparse") 	commands::reparse::print_reparse(opts);
 			else if (opts->command == "bitdecrypt")	commands::bitlocker::decrypt_volume(opts);

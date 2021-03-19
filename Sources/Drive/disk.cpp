@@ -287,10 +287,10 @@ void Disk::_get_volumes(HANDLE h) {
 		PMBR pmbr = mbr();
 		PGPT_HEADER pgpt = gpt();
 		int partition_index = 0;
-		if (protective_mbr() && pgpt != NULL)
+		if (has_protective_mbr())
 		{
 			auto entries = gpt_entries();
-			for (auto entry : entries)
+			for (auto& entry : entries)
 			{
 				PARTITION_INFORMATION_EX pex;
 				pex.PartitionStyle = PARTITION_STYLE_GPT;

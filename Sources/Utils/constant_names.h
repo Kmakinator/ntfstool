@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include <WinSock2.h>
 #include <windows.h>
@@ -10,6 +11,22 @@ namespace constants {
 
 	namespace disk
 	{
+		namespace smart
+		{
+			std::string attribute_name(DWORD index);
+
+			std::string devicemap_type(DWORD type);
+
+			std::string capabilities(DWORD cap);
+		}
+
+		namespace vss
+		{
+			std::string state(DWORD64 s);
+
+			std::vector<std::string> flags(DWORD64 f);
+		}
+
 		std::string partition_type(DWORD t);
 
 		std::string media_type(MEDIA_TYPE t);

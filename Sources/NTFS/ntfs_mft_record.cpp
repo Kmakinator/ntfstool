@@ -163,11 +163,11 @@ std::vector<std::shared_ptr<IndexEntry>> MFTRecord::index()
 	std::vector<std::shared_ptr<IndexEntry>> ret;
 
 	std::string type = MFT_ATTRIBUTE_INDEX_FILENAME;
-	PMFT_RECORD_ATTRIBUTE_HEADER pAttr = attribute_header($INDEX_ROOT, type.c_str());
+	PMFT_RECORD_ATTRIBUTE_HEADER pAttr = attribute_header($INDEX_ROOT, type);
 	if (pAttr == nullptr)
 	{
 		type = MFT_ATTRIBUTE_INDEX_REPARSE;
-		pAttr = attribute_header($INDEX_ROOT, type.c_str());
+		pAttr = attribute_header($INDEX_ROOT, type);
 	}
 
 	if (pAttr != nullptr)
@@ -179,7 +179,7 @@ std::vector<std::shared_ptr<IndexEntry>> MFTRecord::index()
 
 		if (pAttrIndexRoot->Flags & MFT_ATTRIBUTE_INDEX_ROOT_FLAG_LARGE)
 		{
-			PMFT_RECORD_ATTRIBUTE_HEADER pAttrAllocation = attribute_header($INDEX_ALLOCATION, type.c_str());
+			PMFT_RECORD_ATTRIBUTE_HEADER pAttrAllocation = attribute_header($INDEX_ALLOCATION, type);
 			if (pAttrAllocation != nullptr)
 			{
 				indexBlocks = attribute_data<PMFT_RECORD_ATTRIBUTE_INDEX_BLOCK>(pAttrAllocation);
@@ -221,7 +221,7 @@ std::shared_ptr<Buffer<T>> MFTRecord::attribute_data(PMFT_RECORD_ATTRIBUTE_HEADE
 		std::vector<MFT_DATARUN> runList = read_dataruns(pAttributeData);
 		for (const MFT_DATARUN& run : runList)
 		{
-			if (err) break;
+			if (err) break; //-V547
 
 			if (run.offset == 0)
 			{
@@ -242,7 +242,7 @@ std::shared_ptr<Buffer<T>> MFTRecord::attribute_data(PMFT_RECORD_ATTRIBUTE_HEADE
 				}
 				else
 				{
-					readSize += min(filesize - readSize, run.length * _reader->sizes.cluster_size);
+					readSize += min(filesize - readSize, static_cast<DWORD>(run.length) * _reader->sizes.cluster_size);
 				}
 			}
 		}
@@ -417,7 +417,7 @@ cppcoro::generator<std::pair<PBYTE, DWORD>> MFTRecord::process_data(std::string 
 
 				for (const MFT_DATARUN& run : data_runs)
 				{
-					if (err) break;
+					if (err) break; //-V547
 
 					if (last_offset == run.offset) // Padding run
 					{
@@ -470,7 +470,7 @@ cppcoro::generator<std::pair<PBYTE, DWORD>> MFTRecord::process_data(std::string 
 					}
 				}
 			}
-			else
+			else if (pAttributeData->FormCode == NON_RESIDENT_FORM)
 			{
 				Buffer<PBYTE> buffer(block_size);
 

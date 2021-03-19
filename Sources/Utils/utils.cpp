@@ -148,11 +148,12 @@ namespace utils
 		}
 
 		DWORD utf8_string_size(const std::string& str) {
-			int c, i, ix, q;
+			int c, q;
+			size_t i, ix;
 			for (q = 0, i = 0, ix = str.length(); i < ix; i++, q++)
 			{
 				c = (unsigned char)str[i];
-				if (c >= 0 && c <= 127) i += 0;
+				if (c >= 0 && c <= 127) i += 0; //-V560
 				else if ((c & 0xE0) == 0xC0) i += 1;
 				else if ((c & 0xF0) == 0xE0) i += 2;
 				else if ((c & 0xF8) == 0xF0) i += 3;
@@ -164,6 +165,12 @@ namespace utils
 		std::string lower(std::string& s)
 		{
 			transform(s.begin(), s.end(), s.begin(), ::tolower);
+			return s;
+		}
+
+		std::string upper(std::string& s)
+		{
+			transform(s.begin(), s.end(), s.begin(), ::toupper);
 			return s;
 		}
 
@@ -263,7 +270,7 @@ namespace utils
 			Buffer<PCHAR> bufu;
 			int utf8len = WideCharToMultiByte(CP_UTF8, 0, bufw.data(), -1, NULL, 0, NULL, NULL);
 			bufu.resize(utf8len);
-			utf8len = WideCharToMultiByte(CP_UTF8, 0, bufw.data(), -1, bufu.data(), utf8len, NULL, NULL);
+			WideCharToMultiByte(CP_UTF8, 0, bufw.data(), -1, bufu.data(), utf8len, NULL, NULL);
 
 			return bufu.data();
 		}
@@ -373,6 +380,21 @@ namespace utils
 			return  hex((ULONG32)value, suffix, swap);
 		}
 
+		std::string hex6(ULONG64 value, bool suffix, bool swap)
+		{
+			if (swap)
+			{
+				value = _byteswap_uint64(value);
+			}
+			std::ostringstream os;
+			os << std::hex << std::setw(12) << std::setfill('0') << value << std::dec;
+			if (suffix)
+			{
+				os << "h";
+			}
+			return os.str();
+		}
+
 		std::string hex(ULONG64 value, bool suffix, bool swap)
 		{
 			if (swap)
@@ -438,6 +460,19 @@ namespace utils
 			TCHAR buf[64] = { 0 };
 			_stprintf_s(buf, TEXT("%04u-%02u-%02u %02u:%02u:%02u"), st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
 			return std::string(buf);
+		}
+
+		BOOL filetime_to_systemtime(FILETIME ft, PSYSTEMTIME pST)
+		{
+			return FileTimeToSystemTime(&ft, pST);
+		}
+
+		BOOL ull_to_systemtime(ULONGLONG ull, PSYSTEMTIME pST)
+		{
+			FILETIME ft;
+			ft.dwLowDateTime = (DWORD)(ull & 0xFFFFFFFF);
+			ft.dwHighDateTime = (DWORD)(ull >> 32);
+			return filetime_to_systemtime(ft, pST);
 		}
 
 		BOOL filetime_to_local_systemtime(FILETIME ft, PSYSTEMTIME pST)
@@ -507,7 +542,7 @@ namespace utils
 			if (ads_sep != std::string::npos)
 			{
 				stream_name = p.filename().string().substr(ads_sep + 1);
-				size_t last_sep = str.find_last_of(":");
+				size_t last_sep = str.find_last_of(':');
 				str = str.substr(0, last_sep);
 			}
 
