@@ -16,12 +16,6 @@ int main(int argc, char** argv) {
 	SetConsoleOutputCP(CP_UTF8);
 	std::cout << std::endl;
 
-	if (!utils::processes::elevated(GetCurrentProcess()))
-	{
-		std::cerr << "Administrator rights are required to read physical drives." << std::endl;
-		return 1;
-	}
-
 	std::shared_ptr<Options> opts = parse_options(argc, argv);
 
 	if (opts->show_usage) commands::help::print_help(argv[0], opts);
