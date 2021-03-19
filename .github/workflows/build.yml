@@ -49,3 +49,8 @@ jobs:
     - name: MSBuild x64
       working-directory: .
       run: msbuild /p:Configuration=Release /p:Platform=x64 NTFS.vcxproj 
+      
+    - uses: actions/upload-artifact@v1
+      with:
+        name: Publish x64
+        path: ntfstool/Builds/Release/x64/
