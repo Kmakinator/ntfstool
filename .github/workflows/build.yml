@@ -53,4 +53,4 @@ jobs:
     - uses: actions/upload-artifact@v1
       with:
         name: Publish x64
-        path: ntfstool/Builds/Release/x64/
+        path: Builds/Release/x64/
